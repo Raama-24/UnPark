@@ -7,6 +7,13 @@ import os
 
 from inference import process_video
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
+
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 app = FastAPI(title="Illegal Parking Detection API")
 
 # CORS
@@ -18,35 +25,40 @@ app.add_middleware(
 )
 
 # Static folder for processed videos
-app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
+app.mount(
+    "/outputs",
+    StaticFiles(directory=OUTPUT_DIR),
+    name="outputs"
+)
 
-UPLOAD_DIR = "uploads"
-OUTPUT_DIR = "outputs"
-
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 @app.get("/ping")
 def ping():
     return {"status": "ok"}
 
 
+import traceback
+
 @app.post("/upload")
 def upload_video(file: UploadFile = File(...)):
-    print("🔥 UPLOAD HIT")   # <--- ADD THIS
+    print("🔥 UPLOAD HIT")
 
     input_path = os.path.join(UPLOAD_DIR, file.filename)
     base = os.path.splitext(file.filename)[0]
-    output_path = f"outputs/processed_{base}.mp4"
+    output_path = os.path.join(OUTPUT_DIR, f"processed_{base}.mp4")
 
     with open(input_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     print("🔥 FILE SAVED")
 
-    stats = process_video(input_path, output_path)
-
-    print("🔥 PROCESS DONE")
+    try:
+        stats = process_video(input_path, output_path)
+        print("🔥 PROCESS DONE")
+    except Exception as e:
+        print("❌ INFERENCE CRASHED")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
     return {
         "message": "Processing completed",

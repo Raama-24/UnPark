@@ -42,6 +42,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [videoFile, setVideoFile] = useState(null);
   const [selectedViolation, setSelectedViolation] = useState(null);
+  const [processedFilename, setProcessedFilename] = useState("");
+
   const videoRef = useRef(null);
 
   const handleVideoUpload = (e) => {
@@ -86,6 +88,11 @@ export default function Dashboard() {
       alert("Invalid response from backend");
       return;
     }
+
+    const filename = data.output_url.split("/").pop();
+    setProcessedFilename(filename);
+    setVideoUrl(`http://localhost:8000${data.output_url}`);
+
 
     setStats(data.stats);
     setViolations(data.stats.violations ?? []);
@@ -185,10 +192,9 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <div className="bg-card rounded-xl border border-border overflow-hidden shadow-sm">
               <div className="bg-black aspect-video flex items-center justify-center relative">
-                {videoUrl ? (
+                {processedFilename ? (
   <a
-    href={videoUrl}
-    download="processed_video.mp4"
+    href={`http://localhost:8000/download/${encodeURIComponent(processedFilename)}`}
     className="bg-primary text-primary-foreground rounded-lg py-3 px-6 font-medium hover:opacity-90 transition-opacity"
   >
     <Download className="w-5 h-5 inline mr-2" />
@@ -202,7 +208,6 @@ export default function Dashboard() {
     </p>
   </div>
 )}
-
               </div>
 
             
