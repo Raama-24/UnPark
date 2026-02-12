@@ -13,22 +13,22 @@ Requires inefficient manual monitoring
 
 **Features**
 
-✅ Real-time vehicle detection (YOLO)
-✅ Multi-object tracking (DeepSORT / ByteTrack)
-✅ Violation detection logic (No-parking / Overstay)
-✅ Urgency scoring system
-✅ OCR-based number plate extraction (ANPR-ready)
-✅ Evidence clip generation
-✅ MongoDB-based violation storage
-✅ FastAPI backend
-✅ Conceptual AR-assisted enforcement interface
+1. Real-time vehicle detection (YOLO)
+2. Multi-object tracking (DeepSORT / ByteTrack)
+3. Violation detection logic (No-parking / Overstay)
+4. Urgency scoring system
+5. OCR-based number plate extraction (ANPR-ready)
+6. Evidence clip generation
+7. MongoDB-based violation storage
+8. FastAPI backend
+9. Conceptual AR-assisted enforcement interface
 
 **Tech Stack**
 
-👨‍💻 Language : Python
-🤖 AI & Computer Vision: YOLO (Ultralytics) , DeepSORT / ByteTrack , OpenCV , OCR (for ANPR pipeline)
-🌐 Backend : FastAPI , REST APIs
-🗄 Database: MongoDB (Atlas-ready)
+Language : Python
+AI & Computer Vision: YOLO (Ultralytics) , DeepSORT / ByteTrack , OpenCV , OCR (for ANPR pipeline)
+Backend : FastAPI , REST APIs
+Database: MongoDB (Atlas-ready)
 
 **How It Works**
 
