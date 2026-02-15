@@ -213,7 +213,6 @@ def process_video(input_path, output_path):
 
             plate_display = v["plate"] if v["plate"] else "Detecting..."
             label = (
-            f"{v['class']} {plate_display} "
             f"T:{int(v['total_parked_time'])}s "
             f"U:{v['final_urgency']}"
         )

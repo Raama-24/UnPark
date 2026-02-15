@@ -4,8 +4,9 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 import shutil
 import os
-
 from inference import process_video
+from database import videos_collection
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
@@ -54,6 +55,20 @@ def upload_video(file: UploadFile = File(...)):
 
     try:
         stats = process_video(input_path, output_path)
+        # 🔥 SAVE TO MONGODB
+        document = {
+            "original_filename": file.filename,
+            "upload_path": input_path,
+            "output_path": output_path,
+            "processed_at": datetime.utcnow(),
+            "total_vehicles": stats["total_vehicles"],
+            "illegal_vehicles": stats["illegal_vehicles"],
+            "max_urgency": stats["max_urgency"],
+            "violations": stats["violations"],
+            
+        }
+        
+        videos_collection.insert_one(document)
         print("🔥 PROCESS DONE")
     except Exception as e:
         print("❌ INFERENCE CRASHED")
